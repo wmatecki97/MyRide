@@ -1,0 +1,25 @@
+﻿<Window x:Class="MyRideApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MyRideApp"
+        mc:Ignorable="d"
+        Title="MyRide" Height="321" Width="598"
+        Loaded="OnWindowLoaded"
+        StateChanged="OnStateChange"
+        >
+    <Grid>
+        <Label Content="Name" HorizontalAlignment="Left" Margin="222,10,0,0" VerticalAlignment="Top" Width="180"/>
+        <TextBox Name="nameTextBox"  HorizontalAlignment="Left" Height="23" Margin="222,41,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="340"/>
+        <Label Content="Directory Location" HorizontalAlignment="Left" Margin="222,75,0,0" VerticalAlignment="Top" Width="180"/>
+        <TextBox Name="locationTextBox" HorizontalAlignment="Left" Height="23" Margin="222,106,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="340"/>
+        <ListBox Name="directoriesListBox" SelectionChanged="directoriesListBoxSelectionChanged" HorizontalAlignment="Left" Height="173" Margin="21,41,0,0" VerticalAlignment="Top" Width="161"/>
+        <ListBox Name="statusListBox" HorizontalAlignment="Left" Height="56" Margin="222,158,0,0" VerticalAlignment="Top" Width="340"/>
+        <Button Content="Add" HorizontalAlignment="Left" Margin="222,234,0,0" VerticalAlignment="Top" Width="75" Click="AddButtonClicked"/>
+        <Button Content="Delete" HorizontalAlignment="Left" Margin="302,234,0,0" VerticalAlignment="Top" Width="75" Click ="DeleteButtonClicked"/>
+        <Button Content="Push" HorizontalAlignment="Left" Margin="407,234,0,0" VerticalAlignment="Top" Width="75" Click="PushButtonClicked"/>
+        <Button Content="Pull" HorizontalAlignment="Left" Margin="487,234,0,0" VerticalAlignment="Top" Width="75" Click="PullButtonClicked"/>
+        <Button Name="autoSynchronizeButton" Content="Enable AutoSynchronize" HorizontalAlignment="Left" Margin="21,234,0,0" VerticalAlignment="Top" Width="161" Click="AutoSynchronizeButtonClicked"/>
+    </Grid>
+</Window>
