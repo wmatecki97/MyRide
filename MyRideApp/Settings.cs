@@ -21,6 +21,11 @@ namespace MyRide
 
         public static string ProgramFolderName = "MyRaid";
 
+        public bool autoSynchronizationEnabled { get; set; }
+
+        public bool windowMinimized { get; set; }
+
+
         public Settings()
         {
 

@@ -8,12 +8,14 @@
         Title="MyRide" Height="321" Width="598"
         Loaded="OnWindowLoaded"
         StateChanged="OnStateChange"
+        Closing="WindowClosing"
         >
     <Grid>
         <Label Content="Name" HorizontalAlignment="Left" Margin="222,10,0,0" VerticalAlignment="Top" Width="180"/>
         <TextBox Name="nameTextBox"  HorizontalAlignment="Left" Height="23" Margin="222,41,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="340"/>
         <Label Content="Directory Location" HorizontalAlignment="Left" Margin="222,75,0,0" VerticalAlignment="Top" Width="180"/>
-        <TextBox Name="locationTextBox" HorizontalAlignment="Left" Height="23" Margin="222,106,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="340"/>
+        <Button Content="Browse" HorizontalAlignment="Left" Margin="487,109,0,0" VerticalAlignment="Top" Width="75" Click="BrowseButtonClick"/>
+        <TextBox Name="locationTextBox" HorizontalAlignment="Left" Height="23" Margin="222,106,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="245"/>
         <ListBox Name="directoriesListBox" SelectionChanged="directoriesListBoxSelectionChanged" HorizontalAlignment="Left" Height="173" Margin="21,41,0,0" VerticalAlignment="Top" Width="161"/>
         <ListBox Name="statusListBox" HorizontalAlignment="Left" Height="56" Margin="222,158,0,0" VerticalAlignment="Top" Width="340"/>
         <Button Content="Add" HorizontalAlignment="Left" Margin="222,234,0,0" VerticalAlignment="Top" Width="75" Click="AddButtonClicked"/>

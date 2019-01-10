@@ -13,9 +13,13 @@ namespace MyRideApp
 {
     public static class AppManagement
     {
-        public static Settings _settings;
+        public static Settings settings;
 
-        public static bool backgroundProcessing = false;
+        public static bool backgroundProcessing
+        {
+            get { return settings.autoSynchronizationEnabled; }
+            set { settings.autoSynchronizationEnabled = value; }
+        }
 
         private const string NothingToSynchronize = "Nothing to update.";
         private const string NoChangesFound = "No changes found.";
@@ -23,15 +27,19 @@ namespace MyRideApp
         static AppManagement()
         {
             var a = GoogleDriveHelper.GetAllProgramFiles();
-            _settings = Serializer.DeSerializeObject<Settings>("settings.mr");
+            settings = Serializer.DeSerializeObject<Settings>("settings.mr");
 
-            if (_settings == null)
-                _settings = new Settings(DateTime.MinValue);
+
+            if (settings == null)
+                settings = new Settings(DateTime.MinValue);
+
+            backgroundProcessing = false;
+
         }
 
         public static void SaveSettings()
         {
-            Serializer.SerializeObject(_settings, "settings.mr");
+            Serializer.SerializeObject(settings, "settings.mr");
         }
 
         public static string Pull()
@@ -42,9 +50,10 @@ namespace MyRideApp
             {
                 var (name, packageSynchronizationDate) = FileHelper.GetPackageInfo(package);
 
-                SynchronizedDirectory directory = _settings.synchronizedDirectories.FirstOrDefault(d => d.name == name);
+                SynchronizedDirectory directory = settings.synchronizedDirectories.FirstOrDefault(d => d.name == name);
 
-                FileHelper.Unpack(directory.path, package, packageSynchronizationDate);
+                if(directory != null)
+                    FileHelper.Unpack(directory.path, package, packageSynchronizationDate);
             }
 
             if (packagesToSynchronise.Count() > 0)
@@ -54,31 +63,34 @@ namespace MyRideApp
             else return NothingToSynchronize;
         }
 
-        public static string Push()
+        public static string Push(int timeToWait)
         {
             string result = "";
 
             DateTime synchronizationStartTime = DateTime.Now;
+            Thread.Sleep(timeToWait);
 
-            foreach (var directory in _settings.synchronizedDirectories)
+            foreach (var directory in settings.synchronizedDirectories)
             {
-                FileHelper fh = new FileHelper(_settings.lastUpdateTime, directory.path, directory.name);
-                int filesCount = fh.GetFiles();
+                FileHelper fh = new FileHelper(settings.lastUpdateTime, directory.path, directory.name);
+                int filesCount = fh.GetFiles(synchronizationStartTime);
                 if (filesCount > 0)
                 {
                     string package = fh.CreatePackage();
                     GoogleDriveHelper.UploadAndDeleteFile(package);
-                    _settings.uploadedPackages.Add(package);
+                    settings.uploadedPackages.Add(package);
 
                     result += "Pushed: " + filesCount + " files from " + directory.name + " directory. ";
                 }
-
-                result += NoChangesFound;
+                else
+                {
+                    result += NoChangesFound;
+                }
             }
 
-            _settings.lastUpdateTime = synchronizationStartTime;
+            settings.lastUpdateTime = synchronizationStartTime;
 
-            Serializer.SerializeObject(_settings, "settings.mr");
+            Serializer.SerializeObject(settings, "settings.mr");
 
             return result;
         }
@@ -89,7 +101,7 @@ namespace MyRideApp
             List<File> uploadedPackages = GoogleDriveHelper.GetAllProgramFiles();
             foreach (var uploadedPackage in uploadedPackages)
             {
-                if (!_settings.uploadedPackages.Contains(uploadedPackage.Name))
+                if (!settings.uploadedPackages.Contains(uploadedPackage.Name))
                 {
                     string name = GoogleDriveHelper.DownloadAndUnzipPackage(uploadedPackage.Id, uploadedPackage.Name);
                     packages.Add(name);
@@ -113,7 +125,8 @@ namespace MyRideApp
             {
                 Thread.Sleep(7200);
 
-                string pushMessage = Push();
+
+                string pushMessage = Push(30000);
                 pushMessage = pushMessage.Replace(NoChangesFound, "");
 
                 if(pushMessage.Length > 0)

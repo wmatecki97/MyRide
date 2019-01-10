@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using MyRideApp;
 
 
 namespace MyRide
@@ -49,8 +50,9 @@ namespace MyRide
 
 
         #region FileExploration
-        public int GetFiles()
+        public int GetFiles(DateTime startTime)
         {
+            synchronizationStartTime = startTime;
             DirSearch(_startDirectory);
             int modifiedFilesCount = FindModifiedFiles(_startDirectory);
 
@@ -69,13 +71,14 @@ namespace MyRide
         {
             try
             {
-                foreach (string directory in Directory.GetDirectories(dir))
+                var directories = Directory.GetDirectories(dir);
+                foreach (string directory in directories)
                 {
                     DateTime creation = File.GetCreationTime(directory);
                     DateTime modification = File.GetLastWriteTime(directory);
 
 
-                    if (creation > lastUpdateTime)
+                    if (creation > lastUpdateTime && creation <= synchronizationStartTime)
                     {
                         createdDirectories.Add(directory);
                     }
@@ -104,7 +107,7 @@ namespace MyRide
             {
                 modification = File.GetLastWriteTime(file);
 
-                if (modification > lastUpdateTime && !IsDirectory(file))
+                if (modification > lastUpdateTime && modification <= synchronizationStartTime && !IsDirectory(file))
                 {
                     modifiedFiles.Add(file);
                     modifiedFilesCount++;
@@ -209,10 +212,10 @@ namespace MyRide
         {
             string filePath = file.Replace(_startDirectory, "");
             string fileName = GetFileName(filenumber, filePath);
-
+            DateTime modified = File.GetLastWriteTime(file);
             filenumber++;
 
-            SynchronizedFile record = new SynchronizedFile(file, filePath, fileName, _packageName + "\\" + fileName);
+            SynchronizedFile record = new SynchronizedFile(file, filePath, fileName, _packageName + "\\" + fileName, modified);
             return record;
         }
 
@@ -267,6 +270,7 @@ namespace MyRide
                     {
                         File.Delete(destinationPath);
                         File.Copy(filePackagePath, destinationPath);
+                        File.SetLastWriteTime(destinationPath, synchronizedFile.lastWriteTime);
                     }
                 }
 
@@ -282,6 +286,8 @@ namespace MyRide
                     if(!Directory.Exists(destinationPath))
                     {
                         ZipFile.ExtractToDirectory(filePackagePath, destinationPath);
+                        Directory.SetLastWriteTime(destinationPath, synchronizedDirectory.lastWriteTime);
+                        SetLastWriteTimeRecursively(destinationPath, synchronizedDirectory.lastWriteTime);
                     }
                 }
 
@@ -293,8 +299,24 @@ namespace MyRide
             }
         }
 
+        private static void SetLastWriteTimeRecursively(string directory, DateTime date)
+        {
+            foreach (var file in Directory.GetFiles(directory))
+            {
+                File.SetLastWriteTime(file, date);
+            }
+
+            foreach (var subDirectory in Directory.GetDirectories(directory))
+            {
+                Directory.SetLastWriteTime(subDirectory, date);
+                SetLastWriteTimeRecursively(subDirectory, date);
+            }
+
+        }
         #endregion
 
     }
+
+    
 
 }

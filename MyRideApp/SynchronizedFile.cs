@@ -13,13 +13,15 @@ namespace MyRide
         public string relativeFilePath { get; set; }
         public string fileName { get; set; }
         public string packageFilePath { get; set; }
+        public DateTime lastWriteTime { get; set; }
 
-        public SynchronizedFile(string originalFilePath, string relativeFilePath, string name, string packageFilePath)
+        public SynchronizedFile(string originalFilePath, string relativeFilePath, string name, string packageFilePath, DateTime modified)
         {
             this.originalFilePath = originalFilePath;
             this.relativeFilePath = relativeFilePath;
             fileName = name;
             this.packageFilePath = packageFilePath;
+            this.lastWriteTime = modified;
         }
 
         public SynchronizedFile()

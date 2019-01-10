@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyRideApp", "MyRideApp\MyRideApp.csproj", "{39CC1D18-7886-4DBF-BA3B-AAD62E934A28}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "MyRaidInstaller", "MyRaidInstaller\MyRaidInstaller.vdproj", "{88A60965-22AB-4E8E-B3D4-E4F303CC1C3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,8 @@ Global
 		{39CC1D18-7886-4DBF-BA3B-AAD62E934A28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39CC1D18-7886-4DBF-BA3B-AAD62E934A28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39CC1D18-7886-4DBF-BA3B-AAD62E934A28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88A60965-22AB-4E8E-B3D4-E4F303CC1C3E}.Debug|Any CPU.ActiveCfg = Debug
+		{88A60965-22AB-4E8E-B3D4-E4F303CC1C3E}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
